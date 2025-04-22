@@ -30,9 +30,13 @@ jobs:
     
     - name: Run tests
       env:
+        # Set environment variables from GitHub secrets
         DYNAMODB_TABLE: ${{ secrets.TEST_DYNAMODB_TABLE }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
         TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
+        # Add dummy AWS credentials for testing
+        AWS_ACCESS_KEY_ID: 'dummy-access-key-for-tests'
+        AWS_SECRET_ACCESS_KEY: 'dummy-secret-key-for-tests'
       run: |
         cd lambda/reminders
         npm test

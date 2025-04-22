@@ -10,6 +10,16 @@ describe('Reminders Lambda function', () => {
   beforeEach(() => {
     // Reset all mocks before each test
     AWSMock.restore();
+    
+    // Mock AWS credentials to prevent the actual AWS SDK from trying to fetch real credentials
+    process.env.AWS_ACCESS_KEY_ID = 'test-key';
+    process.env.AWS_SECRET_ACCESS_KEY = 'test-secret';
+    process.env.AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+  });
+
+  // Clean up after all tests
+  afterAll(() => {
+    AWSMock.restore();
   });
 
   test('list action: should return reminders for a user', async () => {
@@ -26,6 +36,8 @@ describe('Reminders Lambda function', () => {
       }
     ];
 
+    // Mock the DynamoDB DocumentClient
+    AWSMock.setSDKInstance(AWS);
     AWSMock.mock('DynamoDB.DocumentClient', 'query', (params, callback) => {
       expect(params.TableName).toBe(process.env.DYNAMODB_TABLE);
       expect(params.KeyConditionExpression).toBe('UserId = :userId AND begins_with(ItemId, :prefix)');
@@ -51,7 +63,8 @@ describe('Reminders Lambda function', () => {
   });
 
   test('create action: should create a new reminder', async () => {
-    // Mock DynamoDB put response
+    // Mock the DynamoDB DocumentClient
+    AWSMock.setSDKInstance(AWS);
     AWSMock.mock('DynamoDB.DocumentClient', 'put', (params, callback) => {
       expect(params.TableName).toBe(process.env.DYNAMODB_TABLE);
       expect(params.Item.UserId).toBe(TEST_USER_ID);
@@ -61,7 +74,7 @@ describe('Reminders Lambda function', () => {
 
     // Set up test date for predictable timestamp
     const testDate = new Date('2025-04-22T10:00:00Z');
-    const originalDateNow = Date.now;
+    const originalDate = global.Date;
     global.Date = class extends Date {
       constructor() {
         super();
@@ -91,7 +104,7 @@ describe('Reminders Lambda function', () => {
     const result = await lambda.handler(event);
 
     // Restore original Date
-    global.Date = Date;
+    global.Date = originalDate;
 
     // Verify the response
     expect(result.statusCode).toBe(201);
@@ -115,6 +128,8 @@ describe('Reminders Lambda function', () => {
       }
     ];
 
+    // Mock the DynamoDB DocumentClient
+    AWSMock.setSDKInstance(AWS);
     AWSMock.mock('DynamoDB.DocumentClient', 'query', (params, callback) => {
       expect(params.TableName).toBe(process.env.DYNAMODB_TABLE);
       expect(params.FilterExpression).toContain('notificationSent = :notificationSent');
@@ -164,6 +179,8 @@ describe('Reminders Lambda function', () => {
   });
 
   test('should handle errors properly', async () => {
+    // Mock the DynamoDB DocumentClient
+    AWSMock.setSDKInstance(AWS);
     AWSMock.mock('DynamoDB.DocumentClient', 'query', (params, callback) => {
       callback(new Error('DynamoDB error'), null);
     });
