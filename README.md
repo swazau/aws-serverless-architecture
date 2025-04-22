@@ -2,8 +2,6 @@
 
 A complete serverless backend infrastructure deployed on AWS using a modular Function-as-a-Service (FaaS) approach. This project demonstrates infrastructure as code with Terraform for deploying serverless architectures on AWS.
 
-![AWS Serverless Architecture](https://raw.githubusercontent.com/aws-samples/lambda-refarch-webapp/master/img/lambda-refarch-webapp.png)
-
 ## Architecture Overview
 
 This project implements a complete serverless architecture following a Function-as-a-Service (FaaS) approach:
