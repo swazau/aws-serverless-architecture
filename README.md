@@ -97,7 +97,31 @@ This repository includes GitHub Actions workflow for automated deployment:
 
 3. Push changes to the main branch to trigger the deployment
 
-### Testing the API
+### Testing
+
+#### Automated Tests
+
+This project includes automated tests for the reminder functionality that run on GitHub Actions:
+
+1. Make sure to set up the required secrets in your GitHub repository:
+   - `AWS_ACCESS_KEY_ID`: Your AWS access key
+   - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+   - `AWS_REGION`: Your preferred AWS region (e.g., ap-southeast-2)
+   - `TEST_DYNAMODB_TABLE`: Name of the test DynamoDB table
+   - `TEST_USER_ID`: User ID to use in tests
+
+2. The tests will run automatically on pull requests to the main branch when changes are made to the reminders function.
+
+3. To run tests locally:
+   ```bash
+   cd lambda/reminders
+   npm install
+   npm test
+   ```
+
+Refer to `scripts/github-secrets-setup.md` for detailed instructions on setting up GitHub secrets.
+
+#### Testing the API
 
 Once deployed, you can test the API using curl:
 
@@ -137,9 +161,11 @@ curl -X POST "https://your-api-id.execute-api.your-region.amazonaws.com/dev/remi
 │   ├── auth/              # Authentication function
 │   ├── dashboard/         # Data aggregation function
 │   ├── reminders/         # Data management function
+│   │   └── tests/         # Unit tests for reminders function
 │   └── package.sh         # Packaging script
 ├── scripts/               # Utility scripts
-│   └── init-db.js         # Database initialisation
+│   ├── init-db.js         # Database initialisation
+│   └── github-secrets-setup.md  # Guide for setting up GitHub secrets
 └── terraform/             # Infrastructure as code
     ├── main.tf            # Main Terraform configuration
     ├── variables.tf       # Terraform variables

@@ -1,0 +1,38 @@
+name: Test Reminders Function
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'lambda/reminders/**'
+      - '.github/workflows/test-reminders.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: lambda/reminders/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd lambda/reminders
+        npm install
+        npm install --save-dev jest aws-sdk-mock
+    
+    - name: Run tests
+      env:
+        DYNAMODB_TABLE: ${{ secrets.TEST_DYNAMODB_TABLE }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
+      run: |
+        cd lambda/reminders
+        npm test
