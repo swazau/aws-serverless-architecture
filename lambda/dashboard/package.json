@@ -1,0 +1,19 @@
+{
+  "name": "dashboard-lambda",
+  "version": "1.0.0",
+  "description": "Dashboard Lambda function for Study Reminders App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "serverless"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0"
+  }
+}

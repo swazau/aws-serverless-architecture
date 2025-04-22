@@ -1,0 +1,19 @@
+{
+  "name": "study-reminders-scripts",
+  "version": "1.0.0",
+  "description": "Helper scripts for Study Reminders App",
+  "main": "init-db.js",
+  "scripts": {
+    "init-db": "node init-db.js"
+  },
+  "keywords": [
+    "aws",
+    "dynamodb",
+    "serverless"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0"
+  }
+}
