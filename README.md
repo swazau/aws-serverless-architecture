@@ -1,6 +1,6 @@
-# AWS Serverless Architecture for Study Reminders App
+# AWS Serverless Architecture with Terraform
 
-A complete serverless backend infrastructure deployed on AWS for a Study Reminders mobile application. This project demonstrates a modular Function-as-a-Service (FaaS) architecture that satisfies modern cloud-native application requirements.
+A complete serverless backend infrastructure deployed on AWS using a modular Function-as-a-Service (FaaS) approach. This project demonstrates infrastructure as code with Terraform for deploying serverless architectures on AWS.
 
 ![AWS Serverless Architecture](https://raw.githubusercontent.com/aws-samples/lambda-refarch-webapp/master/img/lambda-refarch-webapp.png)
 
@@ -8,27 +8,11 @@ A complete serverless backend infrastructure deployed on AWS for a Study Reminde
 
 This project implements a complete serverless architecture following a Function-as-a-Service (FaaS) approach:
 
-- **Lambda Functions**: Individual microservices for authentication, dashboard data, and reminders
-- **API Gateway**: HTTP endpoints for mobile app integration
-- **DynamoDB**: NoSQL database for persistent storage of user data, study progress, and reminders
+- **Lambda Functions**: Individual microservices for different business domains
+- **API Gateway**: HTTP endpoints for service exposure
+- **DynamoDB**: NoSQL database for persistent storage
 - **IAM Roles & Policies**: Least-privilege security model for AWS resources
 - **Terraform**: Infrastructure as Code for automated deployment
-
-## Features
-
-- **Authentication**: Secure login functionality
-- **Dashboard**: Aggregated view of user profile, study progress, and upcoming reminders
-- **Reminders Management**: Create and retrieve personalized study reminders
-- **CI/CD Pipeline**: GitHub Actions workflow for automated deployment
-- **Cross-origin Support**: CORS enabled for frontend integration
-
-## User Journeys
-
-The application supports the following key user journeys:
-
-1. **User Authentication**: Securely log in to the mobile app with username/password
-2. **Dashboard View**: See an overview of study progress and upcoming reminders
-3. **Reminder Management**: Create and manage study reminders with topics, subjects, and times
 
 ## Technical Implementation
 
@@ -36,10 +20,10 @@ The application supports the following key user journeys:
 
 | Component | Purpose | AWS Service |
 |-----------|---------|-------------|
-| Authentication Service | User login and validation | Lambda + DynamoDB |
-| Dashboard Service | Retrieve user profile and study data | Lambda + DynamoDB |
-| Reminders Service | Manage study reminders | Lambda + DynamoDB |
-| API Layer | HTTP interface for mobile client | API Gateway |
+| Authentication Service | User authentication | Lambda + DynamoDB |
+| Dashboard Service | Aggregated data retrieval | Lambda + DynamoDB |
+| Reminders Service | Data management | Lambda + DynamoDB |
+| API Layer | HTTP interface | API Gateway |
 | Persistence Layer | Data storage | DynamoDB |
 
 ### Data Model
@@ -50,23 +34,23 @@ DynamoDB uses a single-table design with the following structure:
 - **Sort Key**: `ItemId` (categorizes different types of data)
 - **Item Types**:
   - `PROFILE`: User profile information
-  - `PROGRESS_*`: Study progress records
-  - `REMINDER_*`: Study reminders
+  - `PROGRESS_*`: Progress records
+  - `REMINDER_*`: Reminders data
 
 ### API Endpoints
 
 | Endpoint | Method | Purpose | Query Parameters | Request Body |
 |----------|--------|---------|-----------------|--------------|
-| `/auth` | POST | User authentication | - | `{"username": "string", "password": "string"}` |
-| `/dashboard` | GET | Retrieve dashboard data | `userId` | - |
-| `/reminders` | GET | List user reminders | `userId`, `action=list` | - |
-| `/reminders` | POST | Create a new reminder | `userId`, `action=create` | `{"subject": "string", "topic": "string", "reminderTime": "ISO-string"}` |
+| `/auth` | POST | Authentication | - | `{"username": "string", "password": "string"}` |
+| `/dashboard` | GET | Retrieve aggregated data | `userId` | - |
+| `/reminders` | GET | List reminders | `userId`, `action=list` | - |
+| `/reminders` | POST | Create data | `userId`, `action=create` | `{"subject": "string", "topic": "string", "reminderTime": "ISO-string"}` |
 
 ## Getting Started
 
 ### Prerequisites
 
-- AWS Account (AWS Academy Learner Lab or regular AWS account)
+- AWS Account
 - Terraform installed locally
 - Node.js and npm for Lambda function development
 - Git for version control
@@ -77,7 +61,7 @@ DynamoDB uses a single-table design with the following structure:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/aws-serverless-architecture.git
+   git clone https://github.com/swazau/aws-serverless-architecture.git
    cd aws-serverless-architecture
    ```
 
@@ -117,7 +101,7 @@ This repository includes GitHub Actions workflow for automated deployment:
 
 ### Testing the API
 
-Once deployed, you can test the API using curl or Postman:
+Once deployed, you can test the API using curl:
 
 ```bash
 # Authenticate a user
@@ -137,14 +121,6 @@ curl -X POST "https://your-api-id.execute-api.your-region.amazonaws.com/dev/remi
   -d '{"subject":"Biology","topic":"Cell Structure","reminderTime":"2025-04-23T15:00:00Z"}'
 ```
 
-## Integrating with a Mobile App
-
-The API is designed to be easily integrated with a mobile application. Here's how your mobile app can interact with this backend:
-
-1. **Authentication**: Send user credentials to the `/auth` endpoint to receive a token
-2. **Dashboard**: Call the `/dashboard` endpoint to retrieve all user data in a single request
-3. **Reminders**: Use the `/reminders` endpoint with appropriate parameters to list or create reminders
-
 ## Architecture Benefits
 
 - **Scalability**: Serverless architecture automatically scales based on demand
@@ -153,13 +129,36 @@ The API is designed to be easily integrated with a mobile application. Here's ho
 - **Resilience**: Built-in redundancy and fault tolerance from AWS managed services
 - **Security**: Fine-grained IAM permissions and isolated components
 
+## Project Structure
+
+```
+.
+├── .github/
+│   └── workflows/         # CI/CD configuration
+├── lambda/                # Lambda function code
+│   ├── auth/              # Authentication function
+│   ├── dashboard/         # Data aggregation function
+│   ├── reminders/         # Data management function
+│   └── package.sh         # Packaging script
+├── scripts/               # Utility scripts
+│   └── init-db.js         # Database initialization
+└── terraform/             # Infrastructure as code
+    ├── main.tf            # Main Terraform configuration
+    ├── variables.tf       # Terraform variables
+    └── modules/           # Terraform modules
+        ├── api_gateway/   # API Gateway module
+        ├── dynamodb/      # DynamoDB module
+        ├── iam/           # IAM module
+        └── lambda/        # Lambda module
+```
+
 ## Future Enhancements
 
-- Add user registration functionality
-- Implement reminder notifications via AWS SNS
+- Implement notifications via AWS SNS
 - Add analytics and reporting features
 - Enhance security with JWT tokens and Cognito integration
-- Add study progress tracking and statistics
+- Implement state management with Step Functions
+- Add event processing with EventBridge
 
 ## Contributing
 
