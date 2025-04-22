@@ -29,7 +29,7 @@ This project implements a complete serverless architecture following a Function-
 DynamoDB uses a single-table design with the following structure:
 
 - **Partition Key**: `UserId` (identifies the user)
-- **Sort Key**: `ItemId` (categorizes different types of data)
+- **Sort Key**: `ItemId` (categorises different types of data)
 - **Item Types**:
   - `PROFILE`: User profile information
   - `PROGRESS_*`: Progress records
@@ -78,7 +78,7 @@ DynamoDB uses a single-table design with the following structure:
    terraform apply
    ```
 
-4. Initialize the database with test data:
+4. Initialise the database with test data:
    ```bash
    cd ../scripts
    npm install
@@ -139,7 +139,7 @@ curl -X POST "https://your-api-id.execute-api.your-region.amazonaws.com/dev/remi
 │   ├── reminders/         # Data management function
 │   └── package.sh         # Packaging script
 ├── scripts/               # Utility scripts
-│   └── init-db.js         # Database initialization
+│   └── init-db.js         # Database initialisation
 └── terraform/             # Infrastructure as code
     ├── main.tf            # Main Terraform configuration
     ├── variables.tf       # Terraform variables
