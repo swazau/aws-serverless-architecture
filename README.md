@@ -151,25 +151,3 @@ curl -X POST "https://your-api-id.execute-api.your-region.amazonaws.com/dev/remi
         ├── iam/           # IAM module
         └── lambda/        # Lambda module
 ```
-
-## Future Enhancements
-
-- Implement notifications via AWS SNS
-- Add analytics and reporting features
-- Enhance security with JWT tokens and Cognito integration
-- Implement state management with Step Functions
-- Add event processing with EventBridge
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- AWS for providing the serverless infrastructure platform
-- The Terraform team for the excellent IaC tooling
-- The serverless community for patterns and best practices
